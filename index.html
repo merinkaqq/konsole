@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>rinka@kali: ~</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       1. KALI LINUX ZSH TERMINAL PALETTE & RESET
+       ========================================================================== */
+    :root {
+      --bg: #0b0d10;
+      --bar-bg: #15181e;
+      --kali-blue: #367bf0;
+      --kali-cyan: #2ec27e;
+      --kali-red: #e01b24;
+      --kali-pink: #ff5599;
+      --text: #d0d6e0;
+      --muted: #687385;
+      --border: #222731;
+      --font: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: clamp(12.5px, 3.3vw, 14px);
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ==========================================================================
+       2. TERMINAL WINDOW SHELL
+       ========================================================================== */
+    .terminal-window {
+      height: 100dvh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+    }
+
+    /* Верхняя панель окна терминала (XFCE / Kali style) */
+    .wm-bar {
+      flex-shrink: 0;
+      height: 36px;
+      background: var(--bar-bg);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      user-select: none;
+    }
+
+    .wm-left {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .wm-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .wm-dot.close { background: #ff5f56; }
+    .wm-dot.min { background: #ffbd2e; }
+    .wm-dot.max { background: #27c93f; }
+
+    .wm-title {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .wm-man-btn {
+      background: #1d222b;
+      border: 1px solid #2c3340;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 11.5px;
+      padding: 3px 9px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .wm-man-btn:active {
+      background: var(--kali-blue);
+      color: #fff;
+      border-color: var(--kali-blue);
+    }
+
+    /* ==========================================================================
+       3. TERMINAL BUFFER (STDOUT / STDIN)
+       ========================================================================== */
+    .tty-output {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 12px 12px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      cursor: text;
+    }
+
+    .tty-output::-webkit-scrollbar {
+      width: 5px;
+    }
+    .tty-output::-webkit-scrollbar-thumb {
+      background: #232833;
+    }
+
+    .tty-block {
+      word-break: break-word;
+    }
+
+    /* Классический 2-строчный Kali Linux zsh промпт */
+    .kali-prompt-top {
+      color: var(--kali-blue);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .kali-prompt-top .user {
+      color: var(--kali-cyan);
+      font-weight: 700;
+    }
+    .kali-prompt-top .dir {
+      color: #e5e9f0;
+      font-weight: 700;
+    }
+    .kali-prompt-bottom {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--kali-blue);
+    }
+    .kali-prompt-bottom .cmd-echo {
+      color: #ffffff;
+    }
+
+    .sys-boot {
+      color: var(--muted);
+      font-size: 12px;
+      border-left: 2px solid var(--kali-blue);
+      padding-left: 10px;
+      margin-bottom: 4px;
+    }
+    .sys-boot strong {
+      color: var(--text);
+    }
+
+    /* ==========================================================================
+       4. ASCII ART HEART & ANIMATED ASCII "I LOVE YOU"
+       ========================================================================== */
+    .ascii-stage {
+      padding: 8px 0 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      contain: content;
+    }
+
+    .ascii-heart {
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: clamp(6px, 2.05vw, 11.5px);
+      line-height: 1.05;
+      white-space: pre;
+      color: var(--kali-pink);
+      text-shadow: 0 0 8px rgba(255, 85, 153, 0.45);
+      user-select: none;
+    }
+
+    .ascii-ily {
+      margin-top: 8px;
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: clamp(4.2px, 1.38vw, 9.5px);
+      line-height: 1.08;
+      white-space: pre;
+      color: #ff85b3;
+      text-shadow: 0 0 6px rgba(255, 85, 153, 0.35);
+      user-select: none;
+    }
+
+    /* ==========================================================================
+       5. ACTIVE ZSH INPUT LINE
+       ========================================================================== */
+    .tty-input-wrap {
+      flex-shrink: 0;
+      padding: 6px 12px calc(10px + var(--safe-bottom));
+      background: var(--bg);
+      border-top: 1px solid #161a22;
+    }
+
+    .tty-form {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tty-dollar {
+      color: var(--kali-blue);
+      font-weight: 700;
+      user-select: none;
+    }
+
+    .tty-input {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #ffffff;
+      font-family: var(--font);
+      font-size: 16px; /* Чтобы мобильный браузер не приближал экран */
+      caret-color: var(--kali-cyan);
+    }
+
+    .tty-enter {
+      background: transparent;
+      border: 1px solid #262c38;
+      color: var(--muted);
+      font-family: var(--font);
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .tty-enter:active {
+      border-color: var(--kali-cyan);
+      color: var(--kali-cyan);
+    }
+
+    /* ==========================================================================
+       6. REALISTIC PAPER BOOKLET MODAL (man-book)
+       ========================================================================== */
+    dialog.paper-book-modal {
+      margin: auto;
+      width: min(94vw, 460px);
+      background: transparent;
+      border: none;
+      padding: 0;
+      overflow: visible;
+    }
+
+    dialog.paper-book-modal::backdrop {
+      background: rgba(5, 7, 10, 0.78);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+    }
+
+    /* Обложка и толщина страниц книжки */
+    .book-cover {
+      background: #231917;
+      padding: 7px 9px 9px 12px;
+      border-radius: 4px 12px 12px 4px;
+      box-shadow:
+        -6px 0 0 #160f0e,
+        0 20px 50px rgba(0, 0, 0, 0.85),
+        inset 3px 0 6px rgba(255, 255, 255, 0.08);
+      position: relative;
+    }
+
+    /* Бумажный блок внутри обложки */
+    .book-paper {
+      background: #f5efe2;
+      color: #231f1e;
+      border-radius: 2px 8px 8px 2px;
+      padding: 16px 16px 14px 20px;
+      min-height: 330px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      /* Эффект стопки страниц справа и тени у корешка слева */
+      box-shadow:
+        3px 0 0 #e3dac7,
+        6px 0 0 #d4c9b2,
+        inset 16px 0 22px -12px rgba(45, 32, 20, 0.35);
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 25px,
+        rgba(130, 115, 95, 0.13) 26px
+      );
+      touch-action: pan-y;
+    }
+
+    /* Красная закладка-ляссе сверху */
+    .book-ribbon {
+      position: absolute;
+      top: -5px;
+      right: 26px;
+      width: 14px;
+      height: 28px;
+      background: #b8293d;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .paper-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      border-bottom: 1.5px solid #c7bba6;
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+    }
+
+    .paper-header .book-head-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #6b5e4c;
+    }
+
+    .paper-close {
+      background: transparent;
+      border: none;
+      color: #6b5e4c;
+      font-family: var(--font);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0 4px;
+    }
+
+    .paper-body {
+      flex: 1;
+      animation: turnPage 0.25s ease-out;
+    }
+
+    @keyframes turnPage {
+      from {
+        opacity: 0.25;
+        transform: perspective(700px) rotateY(-14deg);
+        transform-origin: left center;
+      }
+      to {
+        opacity: 1;
+        transform: perspective(700px) rotateY(0deg);
+        transform-origin: left center;
+      }
+    }
+
+    .chapter-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1c1817;
+      margin-bottom: 6px;
+    }
+
+    .chapter-text {
+      font-size: 12px;
+      color: #4a4238;
+      margin-bottom: 12px;
+    }
+
+    .man-entry {
+      margin-bottom: 10px;
+      padding: 6px 8px;
+      border-radius: 4px;
+      background: rgba(120, 102, 78, 0.08);
+      border-left: 2.5px solid #594d3c;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .man-entry:active {
+      background: rgba(184, 41, 61, 0.14);
+    }
+
+    .man-entry.secret-note {
+      border-left-color: #b8293d;
+      background: rgba(184, 41, 61, 0.07);
+    }
+
+    .man-cmd {
+      font-weight: 700;
+      font-size: 12.5px;
+      color: #1a1615;
+    }
+    .man-entry.secret-note .man-cmd {
+      color: #9e1b2e;
+    }
+
+    .man-desc {
+      font-size: 11.5px;
+      color: #4f463b;
+      margin-top: 2px;
+    }
+
+    .paper-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px dashed #c7bba6;
+      padding-top: 8px;
+      margin-top: 8px;
+      font-size: 11.5px;
+      color: #6b5e4c;
+    }
+
+    .page-turn-btn {
+      background: transparent;
+      border: 1px solid #b8ab96;
+      color: #3a3229;
+      font-family: var(--font);
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .page-turn-btn:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+
+    .c-green { color: var(--kali-cyan); }
+    .c-blue { color: var(--kali-blue); }
+    .c-red { color: var(--kali-red); }
+    .c-muted { color: var(--muted); }
+  </style>
+</head>
+<body>
+
+  <div class="terminal-window">
+    <!-- Заголовок окна терминала Kali -->
+    <div class="wm-bar">
+      <div class="wm-left">
+        <span class="wm-dot close"></span>
+        <span class="wm-dot min"></span>
+        <span class="wm-dot max"></span>
+        <span class="wm-title">rinka@kali: ~ (zsh) — love by rinka</span>
+      </div>
+      <button type="button" class="wm-man-btn" id="open-book-btn">man book</button>
+    </div>
+
+    <!-- Вывод терминала (подсказка скрыта, только системный баннер загрузки) -->
+    <div class="tty-output" id="tty-output">
+      <div class="sys-boot">
+        <div><strong>love by rinka</strong> [Kali GNU/Linux Rolling · tty1]</div>
+        <div>Type <code>help</code> or open <code>man book</code> to read documentation.</div>
+      </div>
+    </div>
+
+    <!-- Строка ввода zsh -->
+    <div class="tty-input-wrap">
+      <div class="kali-prompt-top">┌──(<span class="user">rinka㉿kali</span>)-[<span class="dir">~</span>]</div>
+      <form class="tty-form" id="tty-form" autocomplete="off">
+        <span class="tty-dollar">└─$</span>
+        <input
+          type="text"
+          class="tty-input"
+          id="tty-input"
+          autocapitalize="none"
+          autocorrect="off"
+          spellcheck="false"
+          enterkeyhint="send"
+          autofocus
+        />
+        <button type="submit" class="tty-enter">EXEC</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Реалистичная книжка-справочник -->
+  <dialog class="paper-book-modal" id="book-modal" aria-label="Справочник">
+    <div class="book-cover">
+      <div class="book-paper" id="book-paper">
+        <div class="book-ribbon"></div>
+        <div class="paper-header">
+          <span class="book-head-title">MANUAL // LOVE BY RINKA</span>
+          <button type="button" class="paper-close" id="close-book-btn" aria-label="Закрыть">×</button>
+        </div>
+
+        <div class="paper-body" id="paper-body">
+          <!-- Страницы книжки -->
+        </div>
+
+        <div class="paper-footer">
+          <button type="button" class="page-turn-btn" id="prev-page">← стр.</button>
+          <span id="page-num">стр. 1 из 3</span>
+          <button type="button" class="page-turn-btn" id="next-page">стр. →</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    (() => {
+      'use strict';
+
+      /* ========================================================================
+         1. DOM & STATE
+         ======================================================================== */
+      const ttyOutput = document.getElementById('tty-output');
+      const ttyForm = document.getElementById('tty-form');
+      const ttyInput = document.getElementById('tty-input');
+      const bookModal = document.getElementById('book-modal');
+      const bookPaper = document.getElementById('book-paper');
+      const paperBody = document.getElementById('paper-body');
+      const pageNumEl = document.getElementById('page-num');
+      const prevBtn = document.getElementById('prev-page');
+      const nextBtn = document.getElementById('next-page');
+
+      let pageIndex = 0;
+      let animRaf = null;
+      let lastTick = 0;
+      const FPS_INTERVAL = 1000 / 30; // Стабильные 30 FPS без нагрева телефона
+
+      /* ========================================================================
+         2. BOOKLET CONTENT (3 PAGES WITH HIDDEN SECRET ON PAGE 3)
+         ======================================================================== */
+      const PAGES = [
+        {
+          title: 'Глава I. Базовые команды',
+          intro: 'Стандартные утилиты среды rinka@kali. Нажми на команду, чтобы выполнить её в терминале.',
+          entries: [
+            { cmd: 'whoami', desc: 'Вывести имя текущего пользователя' },
+            { cmd: 'uname -a', desc: 'Информация о ядре и сборке системы' },
+            { cmd: 'ls -la', desc: 'Показать список файлов в директории ~' },
+            { cmd: 'clear', desc: 'Очистить буфер окна терминала' }
+          ]
+        },
+        {
+          title: 'Глава II. Сетевые и системные',
+          intro: 'Служебные скрипты из каталога /usr/local/bin.',
+          entries: [
+            { cmd: 'date', desc: 'Текущее системное время и дата' },
+            { cmd: 'uptime', desc: 'Время бесперебойной работы сессии' },
+            { cmd: 'cat readme.txt', desc: 'Прочитать локальную заметку автора' }
+          ]
+        },
+        {
+          title: 'Глава III. Заметка на полях',
+          intro: 'Запись от руки на последней странице справочника:',
+          entries: [
+            {
+              cmd: 'al love',
+              desc: 'Секретный протокол. Запускает живое ASCII-сердце и послание.',
+              secret: true
+            }
+          ]
+        }
+      ];
+
+      function renderBookPage() {
+        const p = PAGES[pageIndex];
+        const itemsHtml = p.entries.map(e => `
+          <div class="man-entry ${e.secret ? 'secret-note' : ''}" data-run="${e.cmd}">
+            <div class="man-cmd">$ ${e.cmd}</div>
+            <div class="man-desc">${e.desc}</div>
+          </div>
+        `).join('');
+
+        // Пересоздаём узел для перезапуска анимации перелистывания
+        paperBody.innerHTML = `
+          <div class="chapter-title">${p.title}</div>
+          <div class="chapter-text">${p.intro}</div>
+          ${itemsHtml}
+        `;
+        paperBody.style.animation = 'none';
+        paperBody.offsetHeight;
+        paperBody.style.animation = '';
+
+        pageNumEl.textContent = `стр. ${pageIndex + 1} из ${PAGES.length}`;
+        prevBtn.disabled = pageIndex === 0;
+        nextBtn.disabled = pageIndex === PAGES.length - 1;
+      }
+
+      function openBook(startPage = 0) {
+        pageIndex = startPage;
+        renderBookPage();
+        if (typeof bookModal.showModal === 'function') {
+          bookModal.showModal();
+        } else {
+          bookModal.setAttribute('open', '');
+        }
+      }
+
+      function closeBook() {
+        if (typeof bookModal.close === 'function') {
+          bookModal.close();
+        } else {
+          bookModal.removeAttribute('open');
+        }
+      }
+
+      document.getElementById('open-book-btn').addEventListener('click', () => openBook(0));
+      document.getElementById('close-book-btn').addEventListener('click', closeBook);
+
+      bookModal.addEventListener('click', (e) => {
+        if (e.target === bookModal) closeBook();
+      });
+
+      prevBtn.addEventListener('click', () => {
+        if (pageIndex > 0) {
+          pageIndex--;
+          renderBookPage();
+        }
+      });
+
+      nextBtn.addEventListener('click', () => {
+        if (pageIndex < PAGES.length - 1) {
+          pageIndex++;
+          renderBookPage();
+        }
+      });
+
+      // Свайпы для перелистывания страниц пальцем
+      let startX = 0;
+      bookPaper.addEventListener('touchstart', (e) => {
+        startX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      bookPaper.addEventListener('touchend', (e) => {
+        const diff = e.changedTouches[0].screenX - startX;
+        if (Math.abs(diff) > 40) {
+          if (diff < 0 && pageIndex < PAGES.length - 1) {
+            pageIndex++;
+            renderBookPage();
+          } else if (diff > 0 && pageIndex > 0) {
+            pageIndex--;
+            renderBookPage();
+          }
+        }
+      }, { passive: true });
+
+      paperBody.addEventListener('click', (e) => {
+        const entry = e.target.closest('[data-run]');
+        if (!entry) return;
+        const cmd = entry.getAttribute('data-run');
+        closeBook();
+        executeCommand(cmd);
+      });
+
+      /* ========================================================================
+         3. ASCII HEART + ANIMATED ASCII BANNER "I LOVE YOU"
+         ======================================================================== */
+      const H_COLS = 44;
+      const H_ROWS = 20;
+      const SHADES = ' .,:;-~=+*#%@';
+      const HEART_GRID = [];
+
+      for (let r = 0; r < H_ROWS; r++) {
+        const y0 = 1.25 - (r / (H_ROWS - 1)) * 2.4;
+        const row = [];
+        for (let c = 0; c < H_COLS; c++) {
+          const x0 = (c / (H_COLS - 1)) * 2.6 - 1.3;
+          row.push({ x0, y0 });
+        }
+        HEART_GRID.push(row);
+      }
+
+      // Компактный ASCII-арт "I LOVE YOU" (62 символа в ширину — влезает на любой телефон)
+      const ILY_BASE = [
+        "██╗   ██╗      ██████╗ ██╗   ██╗███████╗   ██╗   ██╗ ██████╗ ██╗   ██╗",
+        "██║   ██║     ██╔═══██╗██║   ██║██╔════╝   ╚██╗ ██╔╝██╔═══██╗██║   ██║",
+        "██║   ██║     ██║   ██║██║   ██║█████╗      ╚████╔╝ ██║   ██║██║   ██║",
+        "██║   ██║     ██║   ██║╚██╗ ██╔╝██╔══╝       ╚██╔╝  ██║   ██║██║   ██║",
+        "██║   ███████╗╚██████╔╝ ╚████╔╝ ███████╗      ██║   ╚██████╔╝╚██████╔╝",
+        "╚═╝   ╚══════╝ ╚═════╝   ╚═══╝  ╚══════╝      ╚═╝    ╚═════╝  ╚═════╝ "
+      ];
+      const ILY_SPARKS = ['*', '+', '·', '✦', '°'];
+
+      function stopAsciiAnimation() {
+        if (animRaf !== null) {
+          cancelAnimationFrame(animRaf);
+          animRaf = null;
+        }
+      }
+
+      function renderAnimatedLove() {
+        stopAsciiAnimation();
+
+        const block = appendBlock(`
+          <div class="ascii-stage">
+            <pre class="ascii-heart" aria-label="ASCII Heart"></pre>
+            <pre class="ascii-ily" aria-label="ASCII I LOVE YOU"></pre>
+          </div>
+        `);
+
+        const heartEl = block.querySelector('.ascii-heart');
+        const ilyEl = block.querySelector('.ascii-ily');
+        let t = 0;
+        lastTick = performance.now();
+
+        function frame(now) {
+          if (!document.body.contains(heartEl)) {
+            stopAsciiAnimation();
+            return;
+          }
+          animRaf = requestAnimationFrame(frame);
+
+          if (document.hidden || (now - lastTick) < FPS_INTERVAL) return;
+          lastTick = now;
+          t += 0.18;
+
+          // 1. Анимация ASCII сердца
+          const pulse = Math.pow(Math.sin(t), 2) * 0.14 + Math.pow(Math.sin(t * 2 - 0.5), 4) * 0.07;
+          const invScale = 1 / (1 + pulse);
+          const rotScale = 1 / Math.max(0.78, Math.cos(Math.sin(t * 0.5) * 0.3));
+
+          let heartStr = '';
+          for (let r = 0; r < H_ROWS; r++) {
+            const row = HEART_GRID[r];
+            for (let c = 0; c < H_COLS; c++) {
+              const x = row[c].x0 * rotScale * invScale;
+              const y = row[c].y0 * invScale;
+              const a = x * x + y * y - 1;
+              const v = a * a * a - x * x * y * y * y;
+
+              if (v <= 0) {
+                const depth = Math.min(1, Math.sqrt(-v) * 1.45);
+                const shimmer = Math.sin(x * 4 + y * 4 - t * 2.2) * 0.18;
+                const idx = Math.max(1, Math.min(SHADES.length - 1, ((depth + shimmer) * (SHADES.length - 1)) | 0));
+                heartStr += SHADES[idx];
+              } else {
+                heartStr += ' ';
+              }
+            }
+            if (r < H_ROWS - 1) heartStr += '\n';
+          }
+          heartEl.textContent = heartStr;
+          heartEl.style.color = pulse > 0.12 ? '#ff2a78' : '#ff66a3';
+
+          // 2. Анимация ASCII надписи I LOVE YOU (бегущая волна символов + мерцание в пустотах)
+          const wavePos = ((t * 9) % 86) - 8;
+          let ilyStr = '';
+          for (let r = 0; r < ILY_BASE.length; r++) {
+            const line = ILY_BASE[r];
+            let outLine = '';
+            for (let c = 0; c < line.length; c++) {
+              const ch = line[c];
+              const dist = Math.abs(c - wavePos);
+              if (ch === '█') {
+                if (dist < 2.2) outLine += '▓';
+                else if (dist < 4.5) outLine += '▒';
+                else outLine += '█';
+              } else if (ch === ' ') {
+                // Редкие ASCII-искры вокруг букв
+                const hash = Math.sin(r * 17.3 + c * 31.7 + Math.floor(t * 2.5));
+                if (hash > 0.986) {
+                  outLine += ILY_SPARKS[(r + c + (t | 0)) % ILY_SPARKS.length];
+                } else {
+                  outLine += ' ';
+                }
+              } else {
+                outLine += ch;
+              }
+            }
+            ilyStr += outLine + (r < ILY_BASE.length - 1 ? '\n' : '');
+          }
+          ilyEl.textContent = ilyStr;
+        }
+
+        animRaf = requestAnimationFrame(frame);
+      }
+
+      /* ========================================================================
+         4. SHELL COMMANDS & OUTPUT
+         ======================================================================== */
+      function esc(s) {
+        return s.replace(/[&<>"']/g, m => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[m]));
+      }
+
+      function scrollBottom() {
+        requestAnimationFrame(() => {
+          ttyOutput.scrollTop = ttyOutput.scrollHeight;
+        });
+      }
+
+      function appendBlock(html) {
+        const div = document.createElement('div');
+        div.className = 'tty-block';
+        div.innerHTML = html;
+        ttyOutput.appendChild(div);
+        scrollBottom();
+        return div;
+      }
+
+      function executeCommand(raw) {
+        const clean = raw.trim();
+        if (!clean) return;
+
+        // Эхо введённой команды в стиле Kali zsh
+        appendBlock(`
+          <div class="kali-prompt-top">┌──(<span class="user">rinka㉿kali</span>)-[<span class="dir">~</span>]</div>
+          <div class="kali-prompt-bottom">└─$ <span class="cmd-echo">${esc(clean)}</span></div>
+        `);
+
+        const cmd = clean.toLowerCase().replace(/\s+/g, ' ');
+
+        switch (cmd) {
+          case 'al love':
+            renderAnimatedLove();
+            break;
+
+          case 'help':
+          case 'man':
+          case 'man book':
+          case 'book':
+            openBook(0);
+            appendBlock(`<span class="c-muted">[opened manual booklet]</span>`);
+            break;
+
+          case 'whoami':
+            appendBlock(`rinka`);
+            break;
+
+          case 'uname -a':
+          case 'uname':
+            appendBlock(`Linux kali 6.8.11-amd64 #1 SMP PREEMPT_DYNAMIC Kali (love by rinka) x86_64 GNU/Linux`);
+            break;
+
+          case 'ls':
+          case 'ls -la':
+          case 'll':
+            appendBlock(`
+              <div class="c-muted">total 12</div>
+              <div>drwxr-xr-x 2 rinka rinka 4096 Nov 26 19:05 <span class="c-blue">.</span></div>
+              <div>drwxr-xr-x 3 root  root  4096 Nov 26 19:00 <span class="c-blue">..</span></div>
+              <div>-rw-r--r-- 1 rinka rinka  148 Nov 26 19:05 readme.txt</div>
+              <div>-rwxr-xr-x 1 rinka rinka 2048 Nov 26 19:05 <span class="c-green">manual.book</span></div>
+            `);
+            break;
+
+          case 'cat readme.txt':
+            appendBlock(`Открой <span class="c-green">man book</span> и дойди до последней страницы, если хочешь узнать секрет.`);
+            break;
+
+          case 'date':
+            appendBlock(new Date().toUTCString());
+            break;
+
+          case 'uptime':
+            appendBlock(`19:05:12 up 14 days, 3:22, 1 user, load average: 0.04, 0.02, 0.00`);
+            break;
+
+          case 'clear':
+          case 'cls':
+            stopAsciiAnimation();
+            ttyOutput.innerHTML = '';
+            break;
+
+          default:
+            appendBlock(`<span class="c-red">zsh: command not found:</span> ${esc(clean)}`);
+        }
+      }
+
+      /* ========================================================================
+         5. INPUT & VIEWPORT HANDLERS
+         ======================================================================== */
+      ttyForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const val = ttyInput.value;
+        ttyInput.value = '';
+        executeCommand(val);
+      });
+
+      // Фокус на строку ввода при клике по свободному месту терминала
+      ttyOutput.addEventListener('click', () => {
+        if (!window.getSelection().toString()) {
+          ttyInput.focus();
+        }
+      });
+
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', scrollBottom);
+      }
+    })();
+  </script>
+</body>
+</html>
