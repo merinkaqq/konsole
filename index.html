@@ -3,26 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>rinka@kali: ~</title>
+  <title>love by rinka</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cantarell:wght@400;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     /* ==========================================================================
-       1. KALI LINUX ZSH TERMINAL PALETTE & RESET
+       1. KALI LINUX & LOVE-PLASMA TOKENS (OFFICIAL KALI DARK / BREEZE PALETTE)
        ========================================================================== */
     :root {
-      --bg: #0b0d10;
-      --bar-bg: #15181e;
+      --bg: #0d1117;
+      --bar-bg: #161b22;
+      --plasma-bg: #0b0f17;
+      --plasma-win: #161b22;
+      --plasma-header: #1f242d;
+      --plasma-panel: rgba(22, 27, 34, 0.94);
       --kali-blue: #367bf0;
+      --kali-blue-bright: #2495e7;
       --kali-cyan: #2ec27e;
       --kali-red: #e01b24;
       --kali-pink: #ff5599;
-      --text: #d0d6e0;
-      --muted: #687385;
-      --border: #222731;
-      --font: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --text: #d8dee9;
+      --muted: #768390;
+      --border: #262c36;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --font-ui: 'Cantarell', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-top: env(safe-area-inset-top, 0px);
     }
 
     *, *::before, *::after {
@@ -38,14 +45,18 @@
       overflow: hidden;
       background-color: var(--bg);
       color: var(--text);
-      font-family: var(--font);
+      font-family: var(--font-mono);
       font-size: clamp(12.5px, 3.3vw, 14px);
-      line-height: 1.45;
+      line-height: 1.48;
       -webkit-font-smoothing: antialiased;
     }
 
+    .hidden {
+      display: none !important;
+    }
+
     /* ==========================================================================
-       2. TERMINAL WINDOW SHELL
+       2. TTY1 TERMINAL SHELL (INITIAL CLEAN BARE TERMINAL)
        ========================================================================== */
     .terminal-window {
       height: 100dvh;
@@ -53,9 +64,9 @@
       display: flex;
       flex-direction: column;
       background: var(--bg);
+      padding-top: var(--safe-top);
     }
 
-    /* Верхняя панель окна терминала (XFCE / Kali style) */
     .wm-bar {
       flex-shrink: 0;
       height: 36px;
@@ -72,46 +83,50 @@
       display: flex;
       align-items: center;
       gap: 7px;
+      min-width: 0;
     }
 
     .wm-dot {
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      display: inline-block;
+      flex-shrink: 0;
     }
-    .wm-dot.close { background: #ff5f56; }
-    .wm-dot.min { background: #ffbd2e; }
-    .wm-dot.max { background: #27c93f; }
+    .wm-dot.close { background: #e01b24; }
+    .wm-dot.min { background: #f5c211; }
+    .wm-dot.max { background: #2ec27e; }
 
     .wm-title {
       font-size: 12px;
-      color: var(--muted);
+      color: var(--text);
       font-weight: 500;
-      letter-spacing: 0.01em;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
     .wm-man-btn {
-      background: #1d222b;
-      border: 1px solid #2c3340;
+      background: #1f242d;
+      border: 1px solid #30363d;
       color: var(--text);
-      font-family: var(--font);
+      font-family: var(--font-mono);
       font-size: 11.5px;
-      padding: 3px 9px;
+      padding: 3px 10px;
       border-radius: 4px;
       cursor: pointer;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
     }
     .wm-man-btn:active {
       background: var(--kali-blue);
-      color: #fff;
       border-color: var(--kali-blue);
+      color: #fff;
     }
 
     /* ==========================================================================
-       3. TERMINAL BUFFER (STDOUT / STDIN)
+       3. SHARED ZSH TERMINAL BUFFER & PROMPTS
        ========================================================================== */
     .tty-output {
       flex: 1;
@@ -120,22 +135,23 @@
       padding: 12px 12px 8px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 9px;
       cursor: text;
+      overscroll-behavior: contain;
     }
 
     .tty-output::-webkit-scrollbar {
       width: 5px;
     }
     .tty-output::-webkit-scrollbar-thumb {
-      background: #232833;
+      background: #28303c;
+      border-radius: 3px;
     }
 
     .tty-block {
       word-break: break-word;
     }
 
-    /* Классический 2-строчный Kali Linux zsh промпт */
     .kali-prompt-top {
       color: var(--kali-blue);
       font-weight: 500;
@@ -146,7 +162,7 @@
       font-weight: 700;
     }
     .kali-prompt-top .dir {
-      color: #e5e9f0;
+      color: #f0f6fc;
       font-weight: 700;
     }
     .kali-prompt-bottom {
@@ -164,17 +180,38 @@
       font-size: 12px;
       border-left: 2px solid var(--kali-blue);
       padding-left: 10px;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
     .sys-boot strong {
       color: var(--text);
     }
 
+    .apt-progress-line {
+      color: var(--kali-cyan);
+      font-weight: 500;
+      white-space: pre;
+    }
+
+    .neofetch-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: center;
+      font-size: 11.5px;
+      line-height: 1.35;
+    }
+    .neofetch-logo {
+      color: var(--kali-blue-bright);
+      white-space: pre;
+      font-weight: 700;
+      font-size: 10px;
+    }
+
     /* ==========================================================================
-       4. ASCII ART HEART & ANIMATED ASCII "I LOVE YOU"
+       4. ASCII HEART & ANIMATED ASCII "I LOVE YOU"
        ========================================================================== */
     .ascii-stage {
-      padding: 8px 0 4px;
+      padding: 6px 0 4px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -184,9 +221,9 @@
     }
 
     .ascii-heart {
-      font-family: var(--font);
+      font-family: var(--font-mono);
       font-weight: 700;
-      font-size: clamp(6px, 2.05vw, 11.5px);
+      font-size: clamp(6px, 2vw, 11px);
       line-height: 1.05;
       white-space: pre;
       color: var(--kali-pink);
@@ -196,9 +233,9 @@
 
     .ascii-ily {
       margin-top: 8px;
-      font-family: var(--font);
+      font-family: var(--font-mono);
       font-weight: 700;
-      font-size: clamp(4.2px, 1.38vw, 9.5px);
+      font-size: clamp(4.1px, 1.32vw, 9px);
       line-height: 1.08;
       white-space: pre;
       color: #ff85b3;
@@ -207,13 +244,13 @@
     }
 
     /* ==========================================================================
-       5. ACTIVE ZSH INPUT LINE
+       5. ZSH INPUT LINE
        ========================================================================== */
     .tty-input-wrap {
       flex-shrink: 0;
       padding: 6px 12px calc(10px + var(--safe-bottom));
-      background: var(--bg);
-      border-top: 1px solid #161a22;
+      background: inherit;
+      border-top: 1px solid #1b2028;
     }
 
     .tty-form {
@@ -235,17 +272,17 @@
       border: none;
       outline: none;
       color: #ffffff;
-      font-family: var(--font);
-      font-size: 16px; /* Чтобы мобильный браузер не приближал экран */
+      font-family: var(--font-mono);
+      font-size: 16px;
       caret-color: var(--kali-cyan);
     }
 
     .tty-enter {
       background: transparent;
-      border: 1px solid #262c38;
+      border: 1px solid #2d333b;
       color: var(--muted);
-      font-family: var(--font);
-      font-size: 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
       padding: 4px 10px;
       border-radius: 3px;
       cursor: pointer;
@@ -256,7 +293,7 @@
     }
 
     /* ==========================================================================
-       6. REALISTIC PAPER BOOKLET MODAL (man-book)
+       6. REALISTIC PAPER BOOKLET MODAL (man book)
        ========================================================================== */
     dialog.paper-book-modal {
       margin: auto;
@@ -265,38 +302,36 @@
       border: none;
       padding: 0;
       overflow: visible;
+      z-index: 9999;
     }
 
     dialog.paper-book-modal::backdrop {
-      background: rgba(5, 7, 10, 0.78);
+      background: rgba(6, 9, 14, 0.82);
       backdrop-filter: blur(3px);
       -webkit-backdrop-filter: blur(3px);
     }
 
-    /* Обложка и толщина страниц книжки */
     .book-cover {
       background: #231917;
       padding: 7px 9px 9px 12px;
       border-radius: 4px 12px 12px 4px;
       box-shadow:
         -6px 0 0 #160f0e,
-        0 20px 50px rgba(0, 0, 0, 0.85),
+        0 22px 55px rgba(0, 0, 0, 0.88),
         inset 3px 0 6px rgba(255, 255, 255, 0.08);
       position: relative;
     }
 
-    /* Бумажный блок внутри обложки */
     .book-paper {
       background: #f5efe2;
       color: #231f1e;
       border-radius: 2px 8px 8px 2px;
       padding: 16px 16px 14px 20px;
-      min-height: 330px;
+      min-height: 365px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
-      /* Эффект стопки страниц справа и тени у корешка слева */
       box-shadow:
         3px 0 0 #e3dac7,
         6px 0 0 #d4c9b2,
@@ -310,7 +345,6 @@
       touch-action: pan-y;
     }
 
-    /* Красная закладка-ляссе сверху */
     .book-ribbon {
       position: absolute;
       top: -5px;
@@ -343,8 +377,8 @@
       background: transparent;
       border: none;
       color: #6b5e4c;
-      font-family: var(--font);
-      font-size: 16px;
+      font-family: var(--font-mono);
+      font-size: 18px;
       font-weight: 700;
       cursor: pointer;
       padding: 0 4px;
@@ -352,7 +386,7 @@
 
     .paper-body {
       flex: 1;
-      animation: turnPage 0.25s ease-out;
+      animation: turnPage 0.24s ease-out;
     }
 
     @keyframes turnPage {
@@ -372,17 +406,17 @@
       font-size: 14px;
       font-weight: 700;
       color: #1c1817;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
 
     .chapter-text {
       font-size: 12px;
       color: #4a4238;
-      margin-bottom: 12px;
+      margin-bottom: 11px;
     }
 
     .man-entry {
-      margin-bottom: 10px;
+      margin-bottom: 9px;
       padding: 6px 8px;
       border-radius: 4px;
       background: rgba(120, 102, 78, 0.08);
@@ -391,21 +425,41 @@
       transition: background 0.15s ease;
     }
     .man-entry:active {
-      background: rgba(184, 41, 61, 0.14);
+      background: rgba(54, 123, 240, 0.18);
+    }
+
+    .man-entry.plasma-note {
+      border-left-color: #2495e7;
+      background: rgba(36, 149, 231, 0.09);
     }
 
     .man-entry.secret-note {
       border-left-color: #b8293d;
-      background: rgba(184, 41, 61, 0.07);
+      background: rgba(184, 41, 61, 0.09);
+    }
+
+    .man-cmd-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
     }
 
     .man-cmd {
       font-weight: 700;
-      font-size: 12.5px;
+      font-size: 11.5px;
       color: #1a1615;
     }
-    .man-entry.secret-note .man-cmd {
-      color: #9e1b2e;
+    .man-entry.plasma-note .man-cmd { color: #1668b2; }
+    .man-entry.secret-note .man-cmd { color: #9e1b2e; }
+
+    .man-copy-badge {
+      font-size: 10px;
+      color: #6b5e4c;
+      border: 1px solid #c7bba6;
+      padding: 1px 5px;
+      border-radius: 3px;
+      flex-shrink: 0;
     }
 
     .man-desc {
@@ -429,10 +483,10 @@
       background: transparent;
       border: 1px solid #b8ab96;
       color: #3a3229;
-      font-family: var(--font);
+      font-family: var(--font-mono);
       font-size: 11.5px;
       font-weight: 700;
-      padding: 3px 10px;
+      padding: 4px 10px;
       border-radius: 3px;
       cursor: pointer;
     }
@@ -441,35 +495,670 @@
       cursor: default;
     }
 
+    /* ==========================================================================
+       7. KALI PLASMA SPLASH SCREEN & DESKTOP ENVIRONMENT
+       ========================================================================== */
+    .plasma-splash {
+      position: fixed;
+      inset: 0;
+      z-index: 8000;
+      background: #0b0f17;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      font-family: var(--font-ui);
+      color: #d8dee9;
+    }
+
+    .splash-spinner {
+      width: 34px;
+      height: 34px;
+      border: 2.5px solid #212836;
+      border-top-color: var(--kali-blue-bright);
+      border-radius: 50%;
+      animation: spin 0.85s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .plasma-desktop {
+      position: fixed;
+      inset: 0;
+      height: 100dvh;
+      width: 100%;
+      background-color: var(--plasma-bg);
+      /* Фирменные тёмно-синие геометрические обои Kali Linux (лёгкий SVG паттерн) */
+      background-image:
+        radial-gradient(circle at 75% 24%, rgba(36, 149, 231, 0.17) 0%, transparent 48%),
+        radial-gradient(circle at 22% 82%, rgba(54, 123, 240, 0.14) 0%, transparent 52%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%232495e7' stroke-opacity='0.07' stroke-width='1'%3E%3Cpolygon points='0,0 120,60 60,180'/%3E%3Cpolygon points='120,60 240,0 240,140'/%3E%3Cpolygon points='60,180 120,60 240,140 160,240'/%3E%3C/g%3E%3C/svg%3E"),
+        linear-gradient(145deg, #090d14 0%, #0f1623 55%, #0a0f18 100%);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      font-family: var(--font-ui);
+      animation: plasmaFadeIn 0.4s ease-out;
+    }
+
+    @keyframes plasmaFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .plasma-workspace {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      overflow: hidden;
+      padding: calc(14px + var(--safe-top)) 14px 14px;
+    }
+
+    /* Значки на рабочем столе (изначально только базовые Kali; FOR MY LOVE появится после установки) */
+    .desktop-icons {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      max-height: calc(100% - 10px);
+      gap: 12px;
+      width: fit-content;
+      z-index: 1;
+    }
+
+    .desk-icon {
+      width: 84px;
+      padding: 8px 4px;
+      border-radius: 5px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: #e6ebf5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      text-align: center;
+      user-select: none;
+      transition: background 0.14s, border-color 0.14s;
+    }
+
+    .desk-icon:hover, .desk-icon:focus-visible {
+      background: rgba(36, 149, 231, 0.18);
+      border-color: rgba(36, 149, 231, 0.45);
+      outline: none;
+    }
+    .desk-icon:active {
+      transform: scale(0.96);
+    }
+
+    .desk-icon-svg {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 5px 14px rgba(0, 0, 0, 0.5);
+    }
+    .icon-home { background: linear-gradient(145deg, #1b2838, #101824); border: 1px solid #2495e7; }
+    .icon-konsole { background: linear-gradient(145deg, #161b22, #0d1117); border: 1px solid #367bf0; }
+    .icon-manual { background: linear-gradient(145deg, #32251b, #1d140e); border: 1px solid #b5946b; }
+    .icon-love { background: linear-gradient(145deg, #3b1528, #1c0d17); border: 1px solid #ff5599; }
+
+    .desk-icon-label {
+      font-size: 11.5px;
+      font-weight: 400;
+      line-height: 1.2;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95);
+    }
+
+    /* ==========================================================================
+       8. KDE PLASMA / KALI-DARK WINDOW MANAGER (BREEZE DARK)
+       ========================================================================== */
+    .plasma-win {
+      position: absolute;
+      background: var(--plasma-win);
+      border: 1px solid #2b323e;
+      border-radius: 6px;
+      box-shadow: 0 18px 46px rgba(0, 0, 0, 0.78);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: opacity 0.16s ease, transform 0.16s ease;
+    }
+
+    .plasma-win.active-win {
+      border-color: var(--kali-blue-bright);
+      box-shadow: 0 22px 54px rgba(0, 0, 0, 0.88), 0 0 0 1px rgba(36, 149, 231, 0.32);
+    }
+
+    .plasma-win.minimized {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(20px) scale(0.97);
+    }
+
+    .plasma-win.maximized {
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 0;
+      border: none;
+    }
+
+    @media (max-width: 767px) {
+      .plasma-win:not(.maximized) {
+        top: 8px;
+        left: 8px;
+        width: calc(100% - 16px);
+        height: calc(100% - 16px);
+      }
+    }
+
+    @media (min-width: 768px) {
+      #win-konsole:not(.maximized) {
+        top: 38px;
+        left: 135px;
+        width: 600px;
+        height: 430px;
+      }
+      #win-love:not(.maximized) {
+        top: 52px;
+        left: 185px;
+        width: 730px;
+        height: 465px;
+      }
+      #win-home:not(.maximized) {
+        top: 66px;
+        left: 160px;
+        width: 520px;
+        height: 350px;
+      }
+    }
+
+    /* Заголовок окна Kali-Dark / Breeze */
+    .breeze-titlebar {
+      height: 32px;
+      flex-shrink: 0;
+      background: var(--plasma-header);
+      border-bottom: 1px solid #262d38;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      user-select: none;
+      cursor: grab;
+      touch-action: none;
+    }
+    .breeze-titlebar:active {
+      cursor: grabbing;
+    }
+
+    .breeze-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .breeze-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .breeze-btn {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, 0.06);
+      color: #cbd5e1;
+      font-size: 11px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: background 0.14s, color 0.14s;
+    }
+    .breeze-btn:hover { background: rgba(255, 255, 255, 0.16); color: #fff; }
+    .breeze-btn.btn-close:hover { background: #e01b24; color: #fff; }
+
+    /* Меню окна Konsole в стиле KDE */
+    .konsole-menubar {
+      height: 24px;
+      flex-shrink: 0;
+      background: #181d25;
+      border-bottom: 1px solid #222832;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 10px;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      color: #9aa5b4;
+      user-select: none;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .konsole-menubar::-webkit-scrollbar { display: none; }
+
+    .win-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      font-family: var(--font-mono);
+    }
+
+    /* ==========================================================================
+       9. APP: "FOR MY LOVE" (LEFT: REASONS LIST / RIGHT: ANIMATED ASCII HEART)
+       ========================================================================== */
+    .love-app-split {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.18fr 0.82fr;
+      overflow: hidden;
+      background: #0d1117;
+    }
+
+    @media (max-width: 520px) {
+      .love-app-split {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1.15fr 0.85fr;
+      }
+      .love-reasons-pane {
+        border-right: none !important;
+        border-bottom: 1px solid #242b36;
+      }
+    }
+
+    .love-reasons-pane {
+      border-right: 1px solid #242b36;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: #11161f;
+    }
+
+    .love-pane-header {
+      padding: 8px 10px;
+      border-bottom: 1px solid #1f2633;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      background: #161b22;
+      flex-shrink: 0;
+    }
+
+    .love-pane-title {
+      font-family: var(--font-mono);
+      font-size: clamp(11px, 2.8vw, 12px);
+      font-weight: 700;
+      color: var(--kali-pink);
+    }
+
+    .love-actions {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .love-next-btn {
+      background: rgba(255, 85, 153, 0.14);
+      border: 1px solid rgba(255, 85, 153, 0.4);
+      color: #ff85b3;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      padding: 3px 7px;
+      border-radius: 4px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .love-next-btn:active {
+      background: var(--kali-pink);
+      color: #fff;
+    }
+
+    .reasons-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overscroll-behavior: contain;
+    }
+
+    .reasons-list::-webkit-scrollbar {
+      width: 4px;
+    }
+    .reasons-list::-webkit-scrollbar-thumb {
+      background: #2b3342;
+      border-radius: 2px;
+    }
+
+    .reason-item {
+      padding: 8px 10px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.025);
+      border-left: 2.5px solid #30363d;
+      font-family: var(--font-ui);
+      font-size: clamp(11.5px, 2.9vw, 13px);
+      line-height: 1.42;
+      color: #cbd5e1;
+      cursor: pointer;
+      transition: background 0.16s, border-color 0.16s;
+      animation: reasonAppear 0.25s ease-out;
+    }
+
+    @keyframes reasonAppear {
+      from { opacity: 0; transform: translateX(-6px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .reason-item.active-reason {
+      background: rgba(255, 85, 153, 0.12);
+      border-left-color: var(--kali-pink);
+      color: #ffffff;
+    }
+
+    .reason-num {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--kali-cyan);
+      margin-right: 5px;
+      font-weight: 700;
+    }
+
+    .love-add-form {
+      display: flex;
+      gap: 6px;
+      padding: 7px 10px;
+      border-top: 1px solid #1f2633;
+      background: #141922;
+      flex-shrink: 0;
+    }
+
+    .love-add-input {
+      flex: 1;
+      min-width: 0;
+      background: #0d1117;
+      border: 1px solid #2b3340;
+      border-radius: 4px;
+      padding: 4px 8px;
+      color: #fff;
+      font-family: var(--font-ui);
+      font-size: 12px;
+      outline: none;
+    }
+    .love-add-input:focus {
+      border-color: var(--kali-pink);
+    }
+
+    .love-heart-pane {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 4px;
+      background: radial-gradient(circle at center, rgba(255, 85, 153, 0.1) 0%, #0d1117 78%);
+      overflow: hidden;
+      contain: content;
+    }
+
+    .love-app-heart {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: clamp(4.8px, 1.55vw, 9.4px);
+      line-height: 1.04;
+      white-space: pre;
+      color: var(--kali-pink);
+      text-shadow: 0 0 10px rgba(255, 85, 153, 0.5);
+      user-select: none;
+    }
+
+    .love-app-caption {
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: clamp(9.5px, 2.4vw, 11.5px);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: #ff85b3;
+      text-align: center;
+    }
+
+    /* ==========================================================================
+       10. DOLPHIN FILE MANAGER (HOME FOLDER)
+       ========================================================================== */
+    .dolphin-grid {
+      padding: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      font-family: var(--font-ui);
+      font-size: 12px;
+      color: #d8dee9;
+    }
+    .dolphin-item {
+      width: 82px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      text-align: center;
+      padding: 6px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .dolphin-item:hover {
+      background: rgba(36, 149, 231, 0.16);
+    }
+
+    /* ==========================================================================
+       11. KDE PLASMA BOTTOM TASKBAR PANEL & APPLICATION LAUNCHER
+       ========================================================================== */
+    .plasma-panel {
+      flex-shrink: 0;
+      height: calc(40px + var(--safe-bottom));
+      padding-bottom: var(--safe-bottom);
+      background: var(--plasma-panel);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid #262d38;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: 8px;
+      padding-right: 10px;
+      z-index: 500;
+      user-select: none;
+    }
+
+    .panel-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .launcher-btn {
+      height: 28px;
+      padding: 0 9px;
+      border-radius: 4px;
+      background: rgba(36, 149, 231, 0.15);
+      border: 1px solid rgba(36, 149, 231, 0.4);
+      color: #e6edf3;
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .launcher-btn:active, .launcher-btn.open {
+      background: var(--kali-blue);
+      color: #fff;
+    }
+
+    .task-list {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .task-list::-webkit-scrollbar { display: none; }
+
+    .task-tab {
+      height: 27px;
+      padding: 0 9px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid transparent;
+      border-bottom: 2px solid transparent;
+      color: #cbd5e1;
+      font-family: var(--font-ui);
+      font-size: 11.5px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .task-tab.active {
+      background: rgba(36, 149, 231, 0.18);
+      border-bottom-color: var(--kali-blue-bright);
+      color: #fff;
+    }
+
+    .panel-tray {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      color: #cbd5e1;
+      flex-shrink: 0;
+    }
+
+    .tray-badge {
+      color: var(--muted);
+      font-size: 10.5px;
+      font-weight: 700;
+    }
+
+    .tray-clock-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      line-height: 1.12;
+      font-size: 10.5px;
+    }
+    .tray-date {
+      color: var(--muted);
+      font-size: 9.5px;
+    }
+
+    .tray-exit-btn {
+      background: rgba(224, 27, 36, 0.14);
+      border: 1px solid rgba(224, 27, 36, 0.38);
+      color: #ff8086;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 3px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .tray-exit-btn:active {
+      background: var(--kali-red);
+      color: #fff;
+    }
+
+    /* Меню приложений Kali Plasma */
+    .plasma-menu {
+      position: absolute;
+      bottom: calc(46px + var(--safe-bottom));
+      left: 8px;
+      width: min(88vw, 275px);
+      background: rgba(22, 27, 34, 0.97);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid #30363d;
+      border-radius: 7px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85);
+      padding: 8px;
+      z-index: 600;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .menu-user-bar {
+      padding: 5px 8px 7px;
+      border-bottom: 1px solid #262c36;
+      margin-bottom: 4px;
+      font-size: 11.5px;
+      color: var(--kali-cyan);
+      font-family: var(--font-mono);
+      font-weight: 700;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 5px;
+      background: transparent;
+      border: none;
+      color: #e6edf3;
+      font-family: var(--font-ui);
+      font-size: 12.5px;
+      text-align: left;
+      cursor: pointer;
+    }
+    .menu-item:hover, .menu-item:active {
+      background: rgba(36, 149, 231, 0.22);
+    }
+
     .c-green { color: var(--kali-cyan); }
-    .c-blue { color: var(--kali-blue); }
+    .c-blue { color: var(--kali-blue-bright); }
     .c-red { color: var(--kali-red); }
+    .c-pink { color: var(--kali-pink); }
     .c-muted { color: var(--muted); }
   </style>
 </head>
 <body>
 
-  <div class="terminal-window">
-    <!-- Заголовок окна терминала Kali -->
+  <!-- ========================================================================
+       1. INITIAL CLEAN BARE KALI LINUX TTY1 TERMINAL
+       ======================================================================== -->
+  <div class="terminal-window" id="tty-screen">
     <div class="wm-bar">
       <div class="wm-left">
         <span class="wm-dot close"></span>
         <span class="wm-dot min"></span>
         <span class="wm-dot max"></span>
-        <span class="wm-title">rinka@kali: ~ (zsh) — love by rinka</span>
+        <span class="wm-title">rinka@kali: ~ — tty1</span>
       </div>
-      <button type="button" class="wm-man-btn" id="open-book-btn">man book</button>
+      <button type="button" class="wm-man-btn" id="open-book-btn">man</button>
     </div>
 
-    <!-- Вывод терминала (подсказка скрыта, только системный баннер загрузки) -->
     <div class="tty-output" id="tty-output">
       <div class="sys-boot">
-        <div><strong>love by rinka</strong> [Kali GNU/Linux Rolling · tty1]</div>
-        <div>Type <code>help</code> or open <code>man book</code> to read documentation.</div>
+        <div><strong>Kali GNU/Linux Rolling</strong> · love by rinka</div>
+        <div>Type <code>man</code> or <code>help</code> to open the manual booklet.</div>
       </div>
     </div>
 
-    <!-- Строка ввода zsh -->
     <div class="tty-input-wrap">
       <div class="kali-prompt-top">┌──(<span class="user">rinka㉿kali</span>)-[<span class="dir">~</span>]</div>
       <form class="tty-form" id="tty-form" autocomplete="off">
@@ -489,7 +1178,232 @@
     </div>
   </div>
 
-  <!-- Реалистичная книжка-справочник -->
+  <!-- ========================================================================
+       2. KALI PLASMA BRIEF SPLASH SCREEN
+       ======================================================================== -->
+  <div class="plasma-splash hidden" id="plasma-splash">
+    <div class="splash-spinner"></div>
+    <div style="font-size: 13px; letter-spacing: 0.04em;">Starting Love-Plasma KDE Session...</div>
+  </div>
+
+  <!-- ========================================================================
+       3. LOVE-PLASMA GRAPHICAL DESKTOP ENVIRONMENT (NOTHING OPEN BY DEFAULT)
+       ======================================================================== -->
+  <div class="plasma-desktop hidden" id="plasma-screen">
+    <div class="plasma-workspace" id="plasma-workspace">
+      <!-- Ярлыки на рабочем столе (FOR MY LOVE появится только после установки через apt) -->
+      <div class="desktop-icons" id="desktop-icons">
+        <button type="button" class="desk-icon" data-open-win="win-home">
+          <div class="desk-icon-svg icon-home">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#2495e7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
+          <span class="desk-icon-label">Home</span>
+        </button>
+
+        <button type="button" class="desk-icon" data-open-win="win-konsole">
+          <div class="desk-icon-svg icon-konsole">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#367bf0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="4 17 10 11 4 5"></polyline>
+              <line x1="12" y1="19" x2="20" y2="19"></line>
+            </svg>
+          </div>
+          <span class="desk-icon-label">Konsole</span>
+        </button>
+
+        <button type="button" class="desk-icon" id="desk-manual-btn">
+          <div class="desk-icon-svg icon-manual">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#e3c79f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+          </div>
+          <span class="desk-icon-label">man book</span>
+        </button>
+
+        <!-- Скрытый ярлык: разблокируется только после sudo apt install for-my-love -->
+        <button type="button" class="desk-icon hidden" id="desk-icon-love" data-open-win="win-love">
+          <div class="desk-icon-svg icon-love">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="#ff5599" stroke="#ff5599" stroke-width="1.8">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </div>
+          <span class="desk-icon-label">FOR MY LOVE</span>
+        </button>
+      </div>
+
+      <!-- ОКНО 1: HOME (DOLPHIN) — ИЗНАЧАЛЬНО ЗАКРЫТО -->
+      <section class="plasma-win hidden" id="win-home" style="z-index: 12;">
+        <div class="breeze-titlebar" data-drag-win="win-home">
+          <div class="breeze-title">
+            <span class="c-blue">📁</span> /home/rinka — Dolphin
+          </div>
+          <div class="breeze-controls">
+            <button type="button" class="breeze-btn" data-min-win="win-home" title="Свернуть">_</button>
+            <button type="button" class="breeze-btn" data-max-win="win-home" title="Развернуть">□</button>
+            <button type="button" class="breeze-btn btn-close" data-close-win="win-home" title="Закрыть">×</button>
+          </div>
+        </div>
+        <div class="win-body" style="background: #11161f;">
+          <div class="dolphin-grid">
+            <div class="dolphin-item" data-open-win="win-konsole">
+              <span style="font-size: 24px;">⌨️</span>
+              <span>Konsole</span>
+            </div>
+            <div class="dolphin-item" id="dolphin-book-btn">
+              <span style="font-size: 24px;">📖</span>
+              <span>manual.book</span>
+            </div>
+            <div class="dolphin-item" id="dolphin-readme-btn">
+              <span style="font-size: 24px;">📄</span>
+              <span>readme.txt</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ОКНО 2: KONSOLE (ТЕРМИНАЛ ВНУТРИ LOVE-PLASMA) — ИЗНАЧАЛЬНО ЗАКРЫТО -->
+      <section class="plasma-win hidden" id="win-konsole" style="z-index: 15;">
+        <div class="breeze-titlebar" data-drag-win="win-konsole">
+          <div class="breeze-title">
+            <span class="c-blue">&gt;_</span> rinka : zsh — Konsole
+          </div>
+          <div class="breeze-controls">
+            <button type="button" class="breeze-btn" data-min-win="win-konsole" title="Свернуть">_</button>
+            <button type="button" class="breeze-btn" data-max-win="win-konsole" title="Развернуть">□</button>
+            <button type="button" class="breeze-btn btn-close" data-close-win="win-konsole" title="Закрыть">×</button>
+          </div>
+        </div>
+        <div class="konsole-menubar">
+          <span>File</span>
+          <span>Edit</span>
+          <span>View</span>
+          <span>Bookmarks</span>
+          <span>Settings</span>
+          <span>Help</span>
+        </div>
+        <div class="win-body" style="background: #0d1117;">
+          <div class="tty-output" id="konsole-output">
+            <div class="sys-boot">
+              <div><strong>Konsole</strong> · Kali GNU/Linux Rolling</div>
+              <div>Type <code>man</code> to view commands and package instructions.</div>
+            </div>
+          </div>
+          <div class="tty-input-wrap" style="padding-bottom: 8px;">
+            <div class="kali-prompt-top">┌──(<span class="user">rinka㉿kali</span>)-[<span class="dir">~</span>]</div>
+            <form class="tty-form" id="konsole-form" autocomplete="off">
+              <span class="tty-dollar">└─$</span>
+              <input
+                type="text"
+                class="tty-input"
+                id="konsole-input"
+                autocapitalize="none"
+                autocorrect="off"
+                spellcheck="false"
+                enterkeyhint="send"
+              />
+              <button type="submit" class="tty-enter">EXEC</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- ОКНО 3: FOR MY LOVE — ИЗНАЧАЛЬНО НЕ УСТАНОВЛЕНО И ЗАКРЫТО -->
+      <section class="plasma-win hidden" id="win-love" style="z-index: 20;">
+        <div class="breeze-titlebar" data-drag-win="win-love">
+          <div class="breeze-title">
+            <span class="c-pink">♥</span> FOR MY LOVE — Kali-Dark
+          </div>
+          <div class="breeze-controls">
+            <button type="button" class="breeze-btn" data-min-win="win-love" title="Свернуть">_</button>
+            <button type="button" class="breeze-btn" data-max-win="win-love" title="Развернуть">□</button>
+            <button type="button" class="breeze-btn btn-close" data-close-win="win-love" title="Закрыть">×</button>
+          </div>
+        </div>
+        <div class="win-body">
+          <div class="love-app-split">
+            <!-- Слева: строчки за что я люблю -->
+            <div class="love-reasons-pane">
+              <div class="love-pane-header">
+                <span class="love-pane-title">reasons.log</span>
+                <div class="love-actions">
+                  <button type="button" class="love-next-btn" id="all-reasons-btn">все</button>
+                  <button type="button" class="love-next-btn" id="next-reason-btn">+ ещё</button>
+                </div>
+              </div>
+              <div class="reasons-list" id="reasons-list"></div>
+              <form class="love-add-form" id="love-add-form" autocomplete="off">
+                <input type="text" class="love-add-input" id="love-add-input" placeholder="Добавить свою строчку..." />
+                <button type="submit" class="love-next-btn">+</button>
+              </form>
+            </div>
+            <!-- Справа: живое анимированное ASCII сердце -->
+            <div class="love-heart-pane">
+              <pre class="love-app-heart" id="love-app-heart" aria-label="Animated ASCII Heart"></pre>
+              <div class="love-app-caption">I LOVE YOU ♥</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Меню приложений Kali Plasma -->
+    <div class="plasma-menu hidden" id="plasma-menu">
+      <div class="menu-user-bar">rinka@kali // Love-Plasma</div>
+      <button type="button" class="menu-item" data-open-win="win-konsole">
+        <span class="c-blue">&gt;_</span> <span>Konsole</span>
+      </button>
+      <button type="button" class="menu-item" data-open-win="win-home">
+        <span class="c-blue">📁</span> <span>Home (Dolphin)</span>
+      </button>
+      <button type="button" class="menu-item" id="menu-manual-btn">
+        <span>📖</span> <span>man book</span>
+      </button>
+      <button type="button" class="menu-item hidden" id="menu-item-love" data-open-win="win-love">
+        <span class="c-pink">♥</span> <span>FOR MY LOVE</span>
+      </button>
+      <button type="button" class="menu-item" id="menu-logout-btn">
+        <span class="c-red">⏻</span> <span>Выйти в tty1</span>
+      </button>
+    </div>
+
+    <!-- Нижняя панель задач Love-Plasma -->
+    <footer class="plasma-panel">
+      <div class="panel-left">
+        <button type="button" class="launcher-btn" id="launcher-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2495e7" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+          <span>Kali</span>
+        </button>
+        <div class="task-list" id="task-list">
+          <button type="button" class="task-tab hidden" id="task-win-home" data-task-win="win-home">📁 Home</button>
+          <button type="button" class="task-tab hidden" id="task-win-konsole" data-task-win="win-konsole">&gt;_ Konsole</button>
+          <button type="button" class="task-tab hidden" id="task-win-love" data-task-win="win-love">♥ FOR MY LOVE</button>
+        </div>
+      </div>
+      <div class="panel-tray">
+        <span class="tray-badge" id="kbd-lang" title="Раскладка">RU</span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9aa5b4" stroke-width="2">
+          <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+          <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+          <line x1="12" y1="20" x2="12.01" y2="20"></line>
+        </svg>
+        <div class="tray-clock-wrap">
+          <span id="plasma-clock">19:31</span>
+          <span class="tray-date" id="plasma-date">26.11.2026</span>
+        </div>
+        <button type="button" class="tray-exit-btn" id="tray-exit-btn" title="Вернуться в консоль tty1">tty1</button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ========================================================================
+       4. REALISTIC PAPER BOOKLET MODAL (man book)
+       ======================================================================== -->
   <dialog class="paper-book-modal" id="book-modal" aria-label="Справочник">
     <div class="book-cover">
       <div class="book-paper" id="book-paper">
@@ -499,9 +1413,7 @@
           <button type="button" class="paper-close" id="close-book-btn" aria-label="Закрыть">×</button>
         </div>
 
-        <div class="paper-body" id="paper-body">
-          <!-- Страницы книжки -->
-        </div>
+        <div class="paper-body" id="paper-body"></div>
 
         <div class="paper-footer">
           <button type="button" class="page-turn-btn" id="prev-page">← стр.</button>
@@ -517,11 +1429,20 @@
       'use strict';
 
       /* ========================================================================
-         1. DOM & STATE
+         1. DOM REFERENCES & SYSTEM STATE (NOTHING INSTALLED OR OPEN INITIALLY)
          ======================================================================== */
+      const ttyScreen = document.getElementById('tty-screen');
       const ttyOutput = document.getElementById('tty-output');
       const ttyForm = document.getElementById('tty-form');
       const ttyInput = document.getElementById('tty-input');
+
+      const plasmaSplash = document.getElementById('plasma-splash');
+      const plasmaScreen = document.getElementById('plasma-screen');
+      const plasmaWorkspace = document.getElementById('plasma-workspace');
+      const konsoleOutput = document.getElementById('konsole-output');
+      const konsoleForm = document.getElementById('konsole-form');
+      const konsoleInput = document.getElementById('konsole-input');
+
       const bookModal = document.getElementById('book-modal');
       const bookPaper = document.getElementById('book-paper');
       const paperBody = document.getElementById('paper-body');
@@ -529,41 +1450,70 @@
       const prevBtn = document.getElementById('prev-page');
       const nextBtn = document.getElementById('next-page');
 
+      const winLoveEl = document.getElementById('win-love');
+      const loveAppHeartEl = document.getElementById('love-app-heart');
+      const reasonsListEl = document.getElementById('reasons-list');
+      const nextReasonBtn = document.getElementById('next-reason-btn');
+      const allReasonsBtn = document.getElementById('all-reasons-btn');
+      const loveAddForm = document.getElementById('love-add-form');
+      const loveAddInput = document.getElementById('love-add-input');
+
       let pageIndex = 0;
-      let animRaf = null;
+      let isInstalling = false;
+      let isPlasmaInstalled = false;
+      let isLoveAppInstalled = false;
+      let topZ = 30;
+      let activeShell = 'tty';
+
+      const activeHearts = new Set();
+      const activeBanners = new Set();
       let lastTick = 0;
-      const FPS_INTERVAL = 1000 / 30; // Стабильные 30 FPS без нагрева телефона
+      let animTime = 0;
+      const FPS_INTERVAL = 1000 / 32;
 
       /* ========================================================================
-         2. BOOKLET CONTENT (3 PAGES WITH HIDDEN SECRET ON PAGE 3)
+         2. PAPER BOOKLET MANUAL (3 CHAPTERS, COPY/FILL TO INPUT ON TAP)
          ======================================================================== */
       const PAGES = [
         {
           title: 'Глава I. Базовые команды',
-          intro: 'Стандартные утилиты среды rinka@kali. Нажми на команду, чтобы выполнить её в терминале.',
+          intro: 'Стандартные команды Kali Linux. Нажми на команду, чтобы подставить её в строку ввода:',
           entries: [
-            { cmd: 'whoami', desc: 'Вывести имя текущего пользователя' },
-            { cmd: 'uname -a', desc: 'Информация о ядре и сборке системы' },
-            { cmd: 'ls -la', desc: 'Показать список файлов в директории ~' },
-            { cmd: 'clear', desc: 'Очистить буфер окна терминала' }
+            { cmd: 'ls -la', desc: 'Показать файлы и каталоги в ~' },
+            { cmd: 'whoami', desc: 'Имя текущего пользователя' },
+            { cmd: 'uname -a', desc: 'Информация о ядре Linux' },
+            { cmd: 'neofetch', desc: 'Сводка о системе Kali Linux' },
+            { cmd: 'clear', desc: 'Очистить окно терминала' }
           ]
         },
         {
-          title: 'Глава II. Сетевые и системные',
-          intro: 'Служебные скрипты из каталога /usr/local/bin.',
-          entries: [
-            { cmd: 'date', desc: 'Текущее системное время и дата' },
-            { cmd: 'uptime', desc: 'Время бесперебойной работы сессии' },
-            { cmd: 'cat readme.txt', desc: 'Прочитать локальную заметку автора' }
-          ]
-        },
-        {
-          title: 'Глава III. Заметка на полях',
-          intro: 'Запись от руки на последней странице справочника:',
+          title: 'Глава II. Оболочка Love-Plasma',
+          intro: 'Графическое окружение изначально не установлено. Установи его через apt:',
           entries: [
             {
+              cmd: 'sudo apt install love-plasma',
+              desc: 'Скачать и установить рабочий стол Love-Plasma (KDE) и Konsole',
+              plasma: true
+            },
+            {
+              cmd: 'startplasma',
+              desc: 'Запустить графическую сессию (после установки)',
+              plasma: true
+            }
+          ]
+        },
+        {
+          title: 'Глава III. Пакеты и заметка',
+          intro: 'Дополнительные пакеты и запись от руки на полях:',
+          entries: [
+            {
+              cmd: 'sudo apt install for-my-love',
+              desc: 'Установить приложение FOR MY LOVE на рабочий стол',
+              plasma: true
+            },
+            {
               cmd: 'al love',
-              desc: 'Секретный протокол. Запускает живое ASCII-сердце и послание.',
+              desc: 'Заметка на полях: введи в консоли для запуска живого ASCII-сердца и послания.',
               secret: true
             }
           ]
@@ -572,14 +1522,19 @@
 
       function renderBookPage() {
         const p = PAGES[pageIndex];
-        const itemsHtml = p.entries.map(e => `
-          <div class="man-entry ${e.secret ? 'secret-note' : ''}" data-run="${e.cmd}">
-            <div class="man-cmd">$ ${e.cmd}</div>
-            <div class="man-desc">${e.desc}</div>
-          </div>
-        `).join('');
+        const itemsHtml = p.entries.map(e => {
+          const cls = e.secret ? 'secret-note' : (e.plasma ? 'plasma-note' : '');
+          return `
+            <div class="man-entry ${cls}" data-fill="${e.cmd}">
+              <div class="man-cmd-row">
+                <span class="man-cmd">$ ${e.cmd}</span>
+                <span class="man-copy-badge">вставить</span>
+              </div>
+              <div class="man-desc">${e.desc}</div>
+            </div>
+          `;
+        }).join('');
 
-        // Пересоздаём узел для перезапуска анимации перелистывания
         paperBody.innerHTML = `
           <div class="chapter-title">${p.title}</div>
           <div class="chapter-text">${p.intro}</div>
@@ -613,6 +1568,12 @@
       }
 
       document.getElementById('open-book-btn').addEventListener('click', () => openBook(0));
+      document.getElementById('desk-manual-btn').addEventListener('click', () => openBook(0));
+      document.getElementById('dolphin-book-btn').addEventListener('click', () => openBook(0));
+      document.getElementById('menu-manual-btn').addEventListener('click', () => {
+        toggleMenu(false);
+        openBook(0);
+      });
       document.getElementById('close-book-btn').addEventListener('click', closeBook);
 
       bookModal.addEventListener('click', (e) => {
@@ -633,14 +1594,13 @@
         }
       });
 
-      // Свайпы для перелистывания страниц пальцем
-      let startX = 0;
+      let touchStartX = 0;
       bookPaper.addEventListener('touchstart', (e) => {
-        startX = e.changedTouches[0].screenX;
+        touchStartX = e.changedTouches[0].screenX;
       }, { passive: true });
 
       bookPaper.addEventListener('touchend', (e) => {
-        const diff = e.changedTouches[0].screenX - startX;
+        const diff = e.changedTouches[0].screenX - touchStartX;
         if (Math.abs(diff) > 40) {
           if (diff < 0 && pageIndex < PAGES.length - 1) {
             pageIndex++;
@@ -652,19 +1612,40 @@
         }
       }, { passive: true });
 
+      // Нажатие на команду в книжке копирует её в буфер и подставляет в строку ввода, не запуская автоматически
       paperBody.addEventListener('click', (e) => {
-        const entry = e.target.closest('[data-run]');
+        const entry = e.target.closest('[data-fill]');
         if (!entry) return;
-        const cmd = entry.getAttribute('data-run');
+        const cmd = entry.getAttribute('data-fill');
+
+        // Копируем через fallback textarea
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = cmd;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+        } catch (_) {}
+
         closeBook();
-        executeCommand(cmd);
+        if (!plasmaScreen.classList.contains('hidden')) {
+          openWindow('win-konsole');
+          konsoleInput.value = cmd;
+          konsoleInput.focus();
+        } else {
+          ttyInput.value = cmd;
+          ttyInput.focus();
+        }
       });
 
       /* ========================================================================
-         3. ASCII HEART + ANIMATED ASCII BANNER "I LOVE YOU"
+         3. UNIFIED 32FPS ASCII HEART & ANIMATED BANNER ENGINE
          ======================================================================== */
-      const H_COLS = 44;
-      const H_ROWS = 20;
+      const H_COLS = 42;
+      const H_ROWS = 19;
       const SHADES = ' .,:;-~=+*#%@';
       const HEART_GRID = [];
 
@@ -678,7 +1659,6 @@
         HEART_GRID.push(row);
       }
 
-      // Компактный ASCII-арт "I LOVE YOU" (62 символа в ширину — влезает на любой телефон)
       const ILY_BASE = [
         "██╗   ██╗      ██████╗ ██╗   ██╗███████╗   ██╗   ██╗ ██████╗ ██╗   ██╗",
         "██║   ██║     ██╔═══██╗██║   ██║██╔════╝   ╚██╗ ██╔╝██╔═══██╗██║   ██║",
@@ -689,102 +1669,489 @@
       ];
       const ILY_SPARKS = ['*', '+', '·', '✦', '°'];
 
-      function stopAsciiAnimation() {
-        if (animRaf !== null) {
-          cancelAnimationFrame(animRaf);
-          animRaf = null;
+      function buildHeartFrame(t) {
+        const pulse = Math.pow(Math.sin(t), 2) * 0.14 + Math.pow(Math.sin(t * 2 - 0.5), 4) * 0.07;
+        const invScale = 1 / (1 + pulse);
+        const rotScale = 1 / Math.max(0.78, Math.cos(Math.sin(t * 0.5) * 0.3));
+
+        let heartStr = '';
+        for (let r = 0; r < H_ROWS; r++) {
+          const row = HEART_GRID[r];
+          for (let c = 0; c < H_COLS; c++) {
+            const x = row[c].x0 * rotScale * invScale;
+            const y = row[c].y0 * invScale;
+            const a = x * x + y * y - 1;
+            const v = a * a * a - x * x * y * y * y;
+
+            if (v <= 0) {
+              const depth = Math.min(1, Math.sqrt(-v) * 1.45);
+              const shimmer = Math.sin(x * 4 + y * 4 - t * 2.2) * 0.18;
+              const idx = Math.max(1, Math.min(SHADES.length - 1, ((depth + shimmer) * (SHADES.length - 1)) | 0));
+              heartStr += SHADES[idx];
+            } else {
+              heartStr += ' ';
+            }
+          }
+          if (r < H_ROWS - 1) heartStr += '\n';
         }
+        return { heartStr, isBeat: pulse > 0.12 };
       }
 
-      function renderAnimatedLove() {
-        stopAsciiAnimation();
+      function buildIlyFrame(t) {
+        const wavePos = ((t * 9) % 86) - 8;
+        let ilyStr = '';
+        for (let r = 0; r < ILY_BASE.length; r++) {
+          const line = ILY_BASE[r];
+          let outLine = '';
+          for (let c = 0; c < line.length; c++) {
+            const ch = line[c];
+            const dist = Math.abs(c - wavePos);
+            if (ch === '█') {
+              if (dist < 2.2) outLine += '▓';
+              else if (dist < 4.5) outLine += '▒';
+              else outLine += '█';
+            } else if (ch === ' ') {
+              const hash = Math.sin(r * 17.3 + c * 31.7 + Math.floor(t * 2.5));
+              if (hash > 0.986) {
+                outLine += ILY_SPARKS[(r + c + (t | 0)) % ILY_SPARKS.length];
+              } else {
+                outLine += ' ';
+              }
+            } else {
+              outLine += ch;
+            }
+          }
+          ilyStr += outLine + (r < ILY_BASE.length - 1 ? '\n' : '');
+        }
+        return ilyStr;
+      }
 
-        const block = appendBlock(`
+      function globalAnimationLoop(now) {
+        requestAnimationFrame(globalAnimationLoop);
+        if (document.hidden || (now - lastTick) < FPS_INTERVAL) return;
+        if (activeHearts.size === 0 && activeBanners.size === 0) return;
+
+        lastTick = now;
+        animTime += 0.18;
+
+        if (activeHearts.size > 0) {
+          const { heartStr, isBeat } = buildHeartFrame(animTime);
+          const color = isBeat ? '#ff2a78' : '#ff66a3';
+          activeHearts.forEach(el => {
+            if (!document.body.contains(el)) {
+              activeHearts.delete(el);
+              return;
+            }
+            if (el.offsetParent === null) return;
+            el.textContent = heartStr;
+            el.style.color = color;
+          });
+        }
+
+        if (activeBanners.size > 0) {
+          const ilyStr = buildIlyFrame(animTime);
+          activeBanners.forEach(el => {
+            if (!document.body.contains(el)) {
+              activeBanners.delete(el);
+              return;
+            }
+            if (el.offsetParent === null) return;
+            el.textContent = ilyStr;
+          });
+        }
+      }
+      requestAnimationFrame(globalAnimationLoop);
+
+      activeHearts.add(loveAppHeartEl);
+
+      function renderAnimatedLoveInConsole(outputEl) {
+        const block = appendBlock(outputEl, `
           <div class="ascii-stage">
             <pre class="ascii-heart" aria-label="ASCII Heart"></pre>
             <pre class="ascii-ily" aria-label="ASCII I LOVE YOU"></pre>
           </div>
         `);
-
-        const heartEl = block.querySelector('.ascii-heart');
-        const ilyEl = block.querySelector('.ascii-ily');
-        let t = 0;
-        lastTick = performance.now();
-
-        function frame(now) {
-          if (!document.body.contains(heartEl)) {
-            stopAsciiAnimation();
-            return;
-          }
-          animRaf = requestAnimationFrame(frame);
-
-          if (document.hidden || (now - lastTick) < FPS_INTERVAL) return;
-          lastTick = now;
-          t += 0.18;
-
-          // 1. Анимация ASCII сердца
-          const pulse = Math.pow(Math.sin(t), 2) * 0.14 + Math.pow(Math.sin(t * 2 - 0.5), 4) * 0.07;
-          const invScale = 1 / (1 + pulse);
-          const rotScale = 1 / Math.max(0.78, Math.cos(Math.sin(t * 0.5) * 0.3));
-
-          let heartStr = '';
-          for (let r = 0; r < H_ROWS; r++) {
-            const row = HEART_GRID[r];
-            for (let c = 0; c < H_COLS; c++) {
-              const x = row[c].x0 * rotScale * invScale;
-              const y = row[c].y0 * invScale;
-              const a = x * x + y * y - 1;
-              const v = a * a * a - x * x * y * y * y;
-
-              if (v <= 0) {
-                const depth = Math.min(1, Math.sqrt(-v) * 1.45);
-                const shimmer = Math.sin(x * 4 + y * 4 - t * 2.2) * 0.18;
-                const idx = Math.max(1, Math.min(SHADES.length - 1, ((depth + shimmer) * (SHADES.length - 1)) | 0));
-                heartStr += SHADES[idx];
-              } else {
-                heartStr += ' ';
-              }
-            }
-            if (r < H_ROWS - 1) heartStr += '\n';
-          }
-          heartEl.textContent = heartStr;
-          heartEl.style.color = pulse > 0.12 ? '#ff2a78' : '#ff66a3';
-
-          // 2. Анимация ASCII надписи I LOVE YOU (бегущая волна символов + мерцание в пустотах)
-          const wavePos = ((t * 9) % 86) - 8;
-          let ilyStr = '';
-          for (let r = 0; r < ILY_BASE.length; r++) {
-            const line = ILY_BASE[r];
-            let outLine = '';
-            for (let c = 0; c < line.length; c++) {
-              const ch = line[c];
-              const dist = Math.abs(c - wavePos);
-              if (ch === '█') {
-                if (dist < 2.2) outLine += '▓';
-                else if (dist < 4.5) outLine += '▒';
-                else outLine += '█';
-              } else if (ch === ' ') {
-                // Редкие ASCII-искры вокруг букв
-                const hash = Math.sin(r * 17.3 + c * 31.7 + Math.floor(t * 2.5));
-                if (hash > 0.986) {
-                  outLine += ILY_SPARKS[(r + c + (t | 0)) % ILY_SPARKS.length];
-                } else {
-                  outLine += ' ';
-                }
-              } else {
-                outLine += ch;
-              }
-            }
-            ilyStr += outLine + (r < ILY_BASE.length - 1 ? '\n' : '');
-          }
-          ilyEl.textContent = ilyStr;
-        }
-
-        animRaf = requestAnimationFrame(frame);
+        const hEl = block.querySelector('.ascii-heart');
+        const iEl = block.querySelector('.ascii-ily');
+        activeHearts.add(hEl);
+        activeBanners.add(iEl);
       }
 
       /* ========================================================================
-         4. SHELL COMMANDS & OUTPUT
+         4. REALISTIC APT / DPKG INSTALLATIONS (LOVE-PLASMA & FOR-MY-LOVE)
+         ======================================================================== */
+      const sleep = (ms) => new Promise(res => setTimeout(res, ms));
+
+      async function runAptProgress(outputEl) {
+        const progBlock = appendBlock(outputEl, `<div class="apt-progress-line">Progress: [....................]   0%</div>`);
+        const progEl = progBlock.querySelector('.apt-progress-line');
+        const totalBars = 20;
+
+        for (let pct = 0; pct <= 100; pct += 5) {
+          const filled = Math.round((pct / 100) * totalBars);
+          const bar = '#'.repeat(filled) + '.'.repeat(totalBars - filled);
+          const pad = String(pct).padStart(3, ' ');
+          progEl.textContent = `Progress: [${bar}] ${pad}%`;
+          scrollBottom(outputEl);
+          await sleep(50);
+        }
+      }
+
+      async function installLovePlasma(outputEl) {
+        if (isInstalling) return;
+        isInstalling = true;
+
+        const steps = [
+          { text: 'Reading package lists... Done', delay: 220 },
+          { text: 'Building dependency tree... Done', delay: 200 },
+          { text: 'Reading state information... Done', delay: 160 },
+          { text: 'The following additional packages will be installed:', delay: 110 },
+          { text: '  <span class="c-blue">kwin-x11 plasma-workspace kali-themes konsole dolphin-light</span>', delay: 190 },
+          { text: 'The following NEW packages will be installed:', delay: 110 },
+          { text: '  <span class="c-green">love-plasma</span>', delay: 160 },
+          { text: '0 upgraded, 6 newly installed, 0 to remove and 0 not upgraded.', delay: 150 },
+          { text: 'Need to get 46.2 MB of archives. After this operation, 134 MB of additional disk space will be used.', delay: 230 },
+          { text: 'Get:1 http://http.kali.org/kali kali-rolling/main amd64 plasma-workspace 4:6.2.4 [24.1 MB]', delay: 260 },
+          { text: 'Get:2 http://http.kali.org/kali kali-rolling/main amd64 kwin-x11 4:6.2.4 [11.8 MB]', delay: 240 },
+          { text: 'Get:3 http://http.kali.org/kali kali-rolling/main amd64 love-plasma 2026.11 [10.3 MB]', delay: 240 },
+          { text: 'Fetched 46.2 MB in 1s (41.8 MB/s)', delay: 200 },
+          { text: '(Reading database ... 318420 files and directories currently installed.)', delay: 170 },
+          { text: 'Unpacking plasma-workspace (4:6.2.4) ...', delay: 210 },
+          { text: 'Unpacking love-plasma (2026.11) ...', delay: 210 }
+        ];
+
+        for (const s of steps) {
+          appendBlock(outputEl, s.text);
+          await sleep(s.delay);
+        }
+
+        await runAptProgress(outputEl);
+
+        appendBlock(outputEl, 'Setting up kali-themes (2026.4) ...');
+        await sleep(180);
+        appendBlock(outputEl, 'Setting up love-plasma (2026.11) ...');
+        await sleep(220);
+        appendBlock(outputEl, '<span class="c-green">[  OK  ]</span> Love-Plasma installed. Starting graphical session...');
+        await sleep(750);
+
+        isInstalling = false;
+        isPlasmaInstalled = true;
+        enterLovePlasma();
+      }
+
+      async function installForMyLoveApp(outputEl) {
+        if (isInstalling) return;
+        isInstalling = true;
+
+        const steps = [
+          { text: 'Reading package lists... Done', delay: 200 },
+          { text: 'Building dependency tree... Done', delay: 180 },
+          { text: 'The following NEW packages will be installed:', delay: 120 },
+          { text: '  <span class="c-pink">for-my-love</span>', delay: 160 },
+          { text: '0 upgraded, 1 newly installed, 0 to remove.', delay: 140 },
+          { text: 'Get:1 http://http.kali.org/kali kali-rolling/main all for-my-love 1.0_all.deb [4,120 kB]', delay: 260 },
+          { text: 'Fetched 4,120 kB in 0s (18.4 MB/s)', delay: 180 },
+          { text: 'Selecting previously unselected package for-my-love.', delay: 150 },
+          { text: 'Unpacking for-my-love (1.0_all.deb) ...', delay: 220 }
+        ];
+
+        for (const s of steps) {
+          appendBlock(outputEl, s.text);
+          await sleep(s.delay);
+        }
+
+        await runAptProgress(outputEl);
+
+        appendBlock(outputEl, 'Setting up for-my-love (1.0_all.deb) ...');
+        await sleep(180);
+        appendBlock(outputEl, 'Processing triggers for desktop-file-utils (0.27-2) ...');
+        await sleep(180);
+
+        isInstalling = false;
+        isLoveAppInstalled = true;
+
+        // Разблокируем ярлык на рабочем столе и пункт в меню Kali (но не открываем автоматически!)
+        document.getElementById('desk-icon-love').classList.remove('hidden');
+        document.getElementById('menu-item-love').classList.remove('hidden');
+
+        appendBlock(outputEl, `<span class="c-green">[  OK  ]</span> Package <span class="c-pink">for-my-love</span> installed. Launch it from Desktop, Kali menu, or run <code>for-my-love</code>.`);
+      }
+
+      function enterLovePlasma() {
+        ttyScreen.classList.add('hidden');
+        plasmaSplash.classList.remove('hidden');
+
+        setTimeout(() => {
+          plasmaSplash.classList.add('hidden');
+          plasmaScreen.classList.remove('hidden');
+          activeShell = 'konsole';
+          // Ни одно окно на рабочем столе изначально не открыто!
+        }, 850);
+      }
+
+      function exitLovePlasma() {
+        plasmaScreen.classList.add('hidden');
+        ttyScreen.classList.remove('hidden');
+        activeShell = 'tty';
+        ttyInput.focus();
+      }
+
+      /* ========================================================================
+         5. APP: "FOR MY LOVE" (HEARTFELT REASONS LIST + ADD YOUR OWN)
+         ======================================================================== */
+      const LOVE_REASONS = [
+        'За твою искреннюю улыбку, от которой любой тяжёлый день сразу становится светлее.',
+        'За то, как легко и спокойно мне рядом с тобой — как дома, где бы мы ни находились.',
+        'За твой смех, который хочется слышать снова и снова.',
+        'За твою доброту, нежность и умение поддержать в нужную секунду без лишних слов.',
+        'За каждый наш разговор до поздней ночи, когда время перестаёт существовать.',
+        'За то, что ты вдохновляешь меня становиться лучше каждый день.',
+        'За твой взгляд, в котором я всегда нахожу тепло и понимание.',
+        'За то, что просто быть с тобой — уже самое большое счастье.'
+      ];
+
+      let shownReasonsCount = 0;
+
+      function renderReasonItem(text, idx, highlight = true) {
+        const item = document.createElement('div');
+        item.className = 'reason-item' + (highlight ? ' active-reason' : '');
+        const num = String(idx + 1).padStart(2, '0');
+        item.innerHTML = `<span class="reason-num">[${num}]</span>${esc(text)}`;
+
+        if (highlight) {
+          reasonsListEl.querySelectorAll('.reason-item').forEach(el => el.classList.remove('active-reason'));
+        }
+
+        item.addEventListener('click', () => {
+          reasonsListEl.querySelectorAll('.reason-item').forEach(el => el.classList.remove('active-reason'));
+          item.classList.add('active-reason');
+        });
+
+        reasonsListEl.appendChild(item);
+        reasonsListEl.scrollTop = reasonsListEl.scrollHeight;
+      }
+
+      function addNextReason(highlight = true) {
+        if (shownReasonsCount >= LOVE_REASONS.length) {
+          const items = reasonsListEl.querySelectorAll('.reason-item');
+          if (!items.length) return;
+          const curIdx = Array.from(items).findIndex(el => el.classList.contains('active-reason'));
+          const nextIdx = (curIdx + 1) % items.length;
+          items.forEach(el => el.classList.remove('active-reason'));
+          items[nextIdx].classList.add('active-reason');
+          items[nextIdx].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          return;
+        }
+
+        const idx = shownReasonsCount;
+        shownReasonsCount++;
+        renderReasonItem(LOVE_REASONS[idx], idx, highlight);
+
+        if (shownReasonsCount >= LOVE_REASONS.length) {
+          nextReasonBtn.textContent = '♥';
+        }
+      }
+
+      // Изначально загружаем первые 4 строчки
+      for (let i = 0; i < 4; i++) {
+        addNextReason(i === 0);
+      }
+
+      nextReasonBtn.addEventListener('click', () => addNextReason(true));
+      allReasonsBtn.addEventListener('click', () => {
+        while (shownReasonsCount < LOVE_REASONS.length) {
+          addNextReason(false);
+        }
+      });
+
+      loveAddForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const val = loveAddInput.value.trim();
+        if (!val) return;
+        LOVE_REASONS.push(val);
+        shownReasonsCount = LOVE_REASONS.length;
+        renderReasonItem(val, LOVE_REASONS.length - 1, true);
+        loveAddInput.value = '';
+      });
+
+      /* ========================================================================
+         6. KDE PLASMA WINDOW MANAGER (WINDOWS START CLOSED, OPEN ON USER ACTION)
+         ======================================================================== */
+      const plasmaMenu = document.getElementById('plasma-menu');
+      const launcherBtn = document.getElementById('launcher-btn');
+
+      function toggleMenu(forceState) {
+        const shouldOpen = typeof forceState === 'boolean'
+          ? forceState
+          : plasmaMenu.classList.contains('hidden');
+        plasmaMenu.classList.toggle('hidden', !shouldOpen);
+        launcherBtn.classList.toggle('open', shouldOpen);
+      }
+
+      launcherBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMenu();
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!plasmaMenu.contains(e.target) && e.target !== launcherBtn) {
+          toggleMenu(false);
+        }
+      });
+
+      function focusWindow(winId) {
+        topZ++;
+        document.querySelectorAll('.plasma-win').forEach(w => w.classList.remove('active-win'));
+        document.querySelectorAll('.task-tab').forEach(t => t.classList.remove('active'));
+
+        const win = document.getElementById(winId);
+        if (!win) return;
+        win.style.zIndex = topZ;
+        win.classList.add('active-win');
+
+        const tab = document.getElementById('task-' + winId);
+        if (tab) {
+          tab.classList.remove('hidden');
+          tab.classList.add('active');
+        }
+
+        if (winId === 'win-konsole') {
+          activeShell = 'konsole';
+        }
+      }
+
+      function openWindow(winId) {
+        if (winId === 'win-love' && !isLoveAppInstalled) {
+          return;
+        }
+        const win = document.getElementById(winId);
+        if (!win) return;
+        win.classList.remove('hidden', 'minimized');
+        focusWindow(winId);
+        toggleMenu(false);
+      }
+
+      document.querySelectorAll('[data-open-win]').forEach(btn => {
+        btn.addEventListener('click', () => openWindow(btn.getAttribute('data-open-win')));
+      });
+
+      document.getElementById('dolphin-readme-btn').addEventListener('click', () => {
+        openWindow('win-konsole');
+        executeCommand('cat readme.txt', konsoleOutput);
+      });
+
+      document.querySelectorAll('[data-task-win]').forEach(tab => {
+        tab.addEventListener('click', () => {
+          const winId = tab.getAttribute('data-task-win');
+          const win = document.getElementById(winId);
+          if (win.classList.contains('minimized') || win.classList.contains('hidden')) {
+            openWindow(winId);
+          } else if (win.classList.contains('active-win')) {
+            win.classList.add('minimized');
+            tab.classList.remove('active');
+          } else {
+            focusWindow(winId);
+          }
+        });
+      });
+
+      document.querySelectorAll('[data-min-win]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const winId = btn.getAttribute('data-min-win');
+          document.getElementById(winId).classList.add('minimized');
+          const tab = document.getElementById('task-' + winId);
+          if (tab) tab.classList.remove('active');
+        });
+      });
+
+      document.querySelectorAll('[data-max-win]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const winId = btn.getAttribute('data-max-win');
+          const win = document.getElementById(winId);
+          win.classList.toggle('maximized');
+          focusWindow(winId);
+        });
+      });
+
+      document.querySelectorAll('[data-close-win]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const winId = btn.getAttribute('data-close-win');
+          document.getElementById(winId).classList.add('hidden');
+          const tab = document.getElementById('task-' + winId);
+          if (tab) {
+            tab.classList.remove('active');
+            tab.classList.add('hidden');
+          }
+        });
+      });
+
+      document.querySelectorAll('.plasma-win').forEach(win => {
+        win.addEventListener('pointerdown', () => focusWindow(win.id));
+      });
+
+      document.querySelectorAll('[data-drag-win]').forEach(bar => {
+        bar.addEventListener('pointerdown', (e) => {
+          if (e.target.closest('button')) return;
+          const winId = bar.getAttribute('data-drag-win');
+          const win = document.getElementById(winId);
+          if (win.classList.contains('maximized') || window.innerWidth < 768) return;
+
+          focusWindow(winId);
+          const rect = win.getBoundingClientRect();
+          const wsRect = plasmaWorkspace.getBoundingClientRect();
+          const offsetX = e.clientX - rect.left;
+          const offsetY = e.clientY - rect.top;
+
+          function onMove(ev) {
+            const nx = Math.max(0, Math.min(wsRect.width - rect.width, ev.clientX - wsRect.left - offsetX));
+            const ny = Math.max(0, Math.min(wsRect.height - rect.height, ev.clientY - wsRect.top - offsetY));
+            win.style.left = nx + 'px';
+            win.style.top = ny + 'px';
+          }
+
+          function onUp() {
+            window.removeEventListener('pointermove', onMove);
+            window.removeEventListener('pointerup', onUp);
+          }
+
+          window.addEventListener('pointermove', onMove);
+          window.addEventListener('pointerup', onUp);
+        });
+      });
+
+      document.getElementById('menu-logout-btn').addEventListener('click', () => {
+        toggleMenu(false);
+        exitLovePlasma();
+      });
+      document.getElementById('tray-exit-btn').addEventListener('click', exitLovePlasma);
+
+      // Переключение индикатора раскладки RU/EN в трее
+      const kbdLangEl = document.getElementById('kbd-lang');
+      kbdLangEl.addEventListener('click', () => {
+        kbdLangEl.textContent = kbdLangEl.textContent === 'RU' ? 'EN' : 'RU';
+      });
+
+      // Часы и дата в трее
+      const clockEl = document.getElementById('plasma-clock');
+      const dateEl = document.getElementById('plasma-date');
+      function updateClock() {
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        const dd = String(now.getDate()).padStart(2, '0');
+        const mo = String(now.getMonth() + 1).padStart(2, '0');
+        const yyyy = now.getFullYear();
+        clockEl.textContent = `${hh}:${mm}`;
+        dateEl.textContent = `${dd}.${mo}.${yyyy}`;
+      }
+      updateClock();
+      setInterval(updateClock, 15000);
+
+      /* ========================================================================
+         7. ZSH COMMAND INTERPRETER (SHARED BETWEEN TTY1 AND KONSOLE)
          ======================================================================== */
       function esc(s) {
         return s.replace(/[&<>"']/g, m => ({
@@ -792,27 +2159,26 @@
         }[m]));
       }
 
-      function scrollBottom() {
+      function scrollBottom(outputEl) {
         requestAnimationFrame(() => {
-          ttyOutput.scrollTop = ttyOutput.scrollHeight;
+          outputEl.scrollTop = outputEl.scrollHeight;
         });
       }
 
-      function appendBlock(html) {
+      function appendBlock(outputEl, html) {
         const div = document.createElement('div');
         div.className = 'tty-block';
         div.innerHTML = html;
-        ttyOutput.appendChild(div);
-        scrollBottom();
+        outputEl.appendChild(div);
+        scrollBottom(outputEl);
         return div;
       }
 
-      function executeCommand(raw) {
+      function executeCommand(raw, outputEl) {
         const clean = raw.trim();
         if (!clean) return;
 
-        // Эхо введённой команды в стиле Kali zsh
-        appendBlock(`
+        appendBlock(outputEl, `
           <div class="kali-prompt-top">┌──(<span class="user">rinka㉿kali</span>)-[<span class="dir">~</span>]</div>
           <div class="kali-prompt-bottom">└─$ <span class="cmd-echo">${esc(clean)}</span></div>
         `);
@@ -821,7 +2187,49 @@
 
         switch (cmd) {
           case 'al love':
-            renderAnimatedLove();
+            renderAnimatedLoveInConsole(outputEl);
+            break;
+
+          case 'sudo apt install love-plasma':
+          case 'apt install love-plasma':
+          case 'sudo apt update && sudo apt install love-plasma':
+            if (isPlasmaInstalled) {
+              appendBlock(outputEl, `<span class="c-green">love-plasma is already the newest version (2026.11).</span>`);
+            } else {
+              installLovePlasma(outputEl);
+            }
+            break;
+
+          case 'startx':
+          case 'startplasma':
+          case 'startplasma-x11':
+            if (!isPlasmaInstalled) {
+              appendBlock(outputEl, `<span class="c-red">zsh: command not found:</span> ${esc(clean)} <span class="c-muted">(install love-plasma first)</span>`);
+            } else if (!plasmaScreen.classList.contains('hidden')) {
+              appendBlock(outputEl, `Love-Plasma session is already running on DISPLAY=:0.`);
+            } else {
+              enterLovePlasma();
+            }
+            break;
+
+          case 'sudo apt install for-my-love':
+          case 'apt install for-my-love':
+            if (isLoveAppInstalled) {
+              appendBlock(outputEl, `<span class="c-green">for-my-love is already the newest version (1.0).</span>`);
+            } else {
+              installForMyLoveApp(outputEl);
+            }
+            break;
+
+          case 'for-my-love':
+            if (!isLoveAppInstalled) {
+              appendBlock(outputEl, `<span class="c-red">zsh: command not found:</span> for-my-love`);
+            } else if (plasmaScreen.classList.contains('hidden')) {
+              appendBlock(outputEl, `<span class="c-red">qt.qpa.xcb: could not connect to display</span> <span class="c-muted">(run startplasma first)</span>`);
+            } else {
+              openWindow('win-love');
+              appendBlock(outputEl, `<span class="c-muted">[launched for-my-love]</span>`);
+            }
             break;
 
           case 'help':
@@ -829,72 +2237,100 @@
           case 'man book':
           case 'book':
             openBook(0);
-            appendBlock(`<span class="c-muted">[opened manual booklet]</span>`);
+            appendBlock(outputEl, `<span class="c-muted">[opened manual booklet]</span>`);
+            break;
+
+          case 'neofetch':
+            appendBlock(outputEl, `
+              <div class="neofetch-grid">
+                <div class="neofetch-logo">  ,..
+,' ,.
+;  ;'
+;  ;   .
+',  ',  ',
+  ',  ',  '</div>
+                <div>
+                  <div><strong class="c-cyan">rinka@kali</strong></div>
+                  <div class="c-muted">--------------</div>
+                  <div><span class="c-blue">OS:</span> Kali GNU/Linux Rolling</div>
+                  <div><span class="c-blue">Host:</span> love by rinka</div>
+                  <div><span class="c-blue">Kernel:</span> 6.8.11-amd64</div>
+                  <div><span class="c-blue">DE:</span> ${isPlasmaInstalled ? 'Love-Plasma 6.2 (Kali-Dark)' : 'none (tty1)'}</div>
+                  <div><span class="c-blue">Shell:</span> zsh 5.9</div>
+                </div>
+              </div>
+            `);
             break;
 
           case 'whoami':
-            appendBlock(`rinka`);
+            appendBlock(outputEl, `rinka`);
             break;
 
           case 'uname -a':
           case 'uname':
-            appendBlock(`Linux kali 6.8.11-amd64 #1 SMP PREEMPT_DYNAMIC Kali (love by rinka) x86_64 GNU/Linux`);
+            appendBlock(outputEl, `Linux kali 6.8.11-amd64 #1 SMP PREEMPT_DYNAMIC Kali (love by rinka) x86_64 GNU/Linux`);
             break;
 
           case 'ls':
           case 'ls -la':
           case 'll':
-            appendBlock(`
-              <div class="c-muted">total 12</div>
-              <div>drwxr-xr-x 2 rinka rinka 4096 Nov 26 19:05 <span class="c-blue">.</span></div>
+            appendBlock(outputEl, `
+              <div class="c-muted">total 16</div>
+              <div>drwxr-xr-x 2 rinka rinka 4096 Nov 26 19:31 <span class="c-blue">.</span></div>
               <div>drwxr-xr-x 3 root  root  4096 Nov 26 19:00 <span class="c-blue">..</span></div>
-              <div>-rw-r--r-- 1 rinka rinka  148 Nov 26 19:05 readme.txt</div>
-              <div>-rwxr-xr-x 1 rinka rinka 2048 Nov 26 19:05 <span class="c-green">manual.book</span></div>
+              <div>-rw-r--r-- 1 rinka rinka  210 Nov 26 19:31 readme.txt</div>
+              <div>-rwxr-xr-x 1 rinka rinka 2048 Nov 26 19:31 <span class="c-green">manual.book</span></div>
             `);
             break;
 
           case 'cat readme.txt':
-            appendBlock(`Открой <span class="c-green">man book</span> и дойди до последней страницы, если хочешь узнать секрет.`);
+            appendBlock(outputEl, `Открой <span class="c-green">man</span>, чтобы посмотреть команды установки графической оболочки Love-Plasma, пакетов и секретного протокола.`);
             break;
 
           case 'date':
-            appendBlock(new Date().toUTCString());
-            break;
-
-          case 'uptime':
-            appendBlock(`19:05:12 up 14 days, 3:22, 1 user, load average: 0.04, 0.02, 0.00`);
+            appendBlock(outputEl, new Date().toUTCString());
             break;
 
           case 'clear':
           case 'cls':
-            stopAsciiAnimation();
-            ttyOutput.innerHTML = '';
+            outputEl.innerHTML = '';
             break;
 
           default:
-            appendBlock(`<span class="c-red">zsh: command not found:</span> ${esc(clean)}`);
+            appendBlock(outputEl, `<span class="c-red">zsh: command not found:</span> ${esc(clean)}`);
         }
       }
 
       /* ========================================================================
-         5. INPUT & VIEWPORT HANDLERS
+         8. FORM & VIEWPORT EVENT BINDINGS
          ======================================================================== */
       ttyForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const val = ttyInput.value;
         ttyInput.value = '';
-        executeCommand(val);
+        executeCommand(val, ttyOutput);
       });
 
-      // Фокус на строку ввода при клике по свободному месту терминала
       ttyOutput.addEventListener('click', () => {
-        if (!window.getSelection().toString()) {
-          ttyInput.focus();
-        }
+        if (!window.getSelection().toString()) ttyInput.focus();
+      });
+
+      konsoleForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const val = konsoleInput.value;
+        konsoleInput.value = '';
+        executeCommand(val, konsoleOutput);
+      });
+
+      konsoleOutput.addEventListener('click', () => {
+        if (!window.getSelection().toString()) konsoleInput.focus();
       });
 
       if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', scrollBottom);
+        window.visualViewport.addEventListener('resize', () => {
+          scrollBottom(ttyOutput);
+          scrollBottom(konsoleOutput);
+        });
       }
     })();
   </script>
